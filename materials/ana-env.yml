@@ -2,7 +2,7 @@
 - hosts: all
   tasks:
       # Dav needs Vim
-      - apt: pkg=gvim update_cache=yes
+      - apt: pkg=vim-gtk update_cache=yes
       - apt: pkg=nemo-rabbitvcs
 
       # Note, we only need to update the cache once (in the first apt command)
