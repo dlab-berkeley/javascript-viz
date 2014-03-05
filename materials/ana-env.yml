@@ -1,50 +1,16 @@
 ---
 - hosts: all
   tasks:
-      # We can't add repositories using the ansible apt_repository commands without pycurl
-      # - apt: pkg=python-pycurl state=present update_cache=yes
-
-      # Manually perform the commands from:
-      # https://toolbelt.heroku.com/install-ubuntu.sh
-      # `shell` is necessary to enable stdout redirect
-      - shell: echo "deb http://toolbelt.heroku.com/ubuntu ./" > /etc/apt/sources.list.d/heroku.list creates=/etc/apt/sources.list.d/heroku.list
-      - apt_key: url=https://toolbelt.heroku.com/apt/release.key
+      # Dav needs Vim
+      - apt: pkg=gvim update_cache=yes
+      - apt: pkg=nemo-rabbitvcs
 
       # Note, we only need to update the cache once (in the first apt command)
       - name: Python packages
-        apt: pkg={{ item }} state=latest update_cache=yes
+        apt: pkg={{ item }} state=latest 
         with_items:
             - python-tornado # this pulls in pycurl
             - python-zmq
             - python-jinja2
-            - python-sqlalchemy
-            - python-psycopg2
             - python-pip
       - pip: name=ipython version=1.2
-
-      # Setup Heroku's version of PostgreSQL
-      # Can get info via `heroku pg:info`
-      # Last check, we're running on 9.1.9 (at least for staging), so we can stick
-      # with the default ubuntu precise versions
-      - apt: pkg=postgresql-9.1 state=latest
-
-      - apt: pkg=heroku-toolbelt state=latest
-
-      # Dav needs Vim
-      - apt: pkg=vim
-
-# Add vagrant as a user and owner of the oroeco database
-# We need to do this as the postgres user to have needed permissions
-- hosts: all
-  sudo: yes
-  sudo_user: postgres
-  tasks:
-      - postgresql_user: name=ct
-      # The encoding here is critical to make things work WRT Heroku
-      # This requires template0 (as template1 is in the system ASCII encoding),
-      # but template0 should be used anyway for cloning from a pg_dump.
-      # utf8 *should* be redundant, but it's worth being safe. template0
-      # disables any local customizations to default database contents (this is
-      # standard practice for creating a clone of an existing DB).
-      - postgresql_db: name=opendata owner=ct
-                       encoding=utf8 template=template0
