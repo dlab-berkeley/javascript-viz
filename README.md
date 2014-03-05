@@ -26,3 +26,14 @@ the best, but it (like the IPython notebook) provides an *executable* textbook:
 
 [Eloquent Javascript (2nd ed.
 preview)](http://eloquentjavascript.net/2nd_edition/preview/)
+
+Rough Curriculum
+----------------
+
+ 1. First pass at some D3
+ 2. Intro to some easier high-level libraries
+   - Dimple.js (and friends)
+   - How to spin up a server quickly from the command line
+ 3. Intro to mapping
+ 4. Good Architecture for mapping
+ 5. Using developer features of the browser
